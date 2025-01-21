@@ -1,6 +1,7 @@
 module "amplify" {
   source = "./amplify"
   api_endpoint = module.apigateway.api_endpoint
+  github_token = var.github_token
 }
 
 module "lambda" {

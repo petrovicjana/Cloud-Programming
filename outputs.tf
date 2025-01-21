@@ -1,3 +1,4 @@
 output "website_url" {
-  value = aws_amplify_app.amplify_app.default_domain
+  value       = module.amplify.website_url
+  description = "Amplify app URL"
 }

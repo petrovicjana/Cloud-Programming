@@ -6,5 +6,12 @@ variable "amplify_app_name" {
 
 variable "api_endpoint" {}
 
+variable "github_token" {
+  description = "GitHub personal access token"
+  type        = string
+  sensitive   = true
+}
+
+
 
 
