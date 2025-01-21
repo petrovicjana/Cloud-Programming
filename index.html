@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>To the Power of Math!</title>
+    <style>
+        h1 {
+            color: #FFFFFF;
+            font-family: system-ui;
+            margin-left: 20px;
+        }
+        body {
+            background-color: #222629;
+        }
+        label {
+            color: #86C232;
+            font-family: system-ui;
+            font-size: 20px;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #86C232;
+            border-color: #86C232;
+            color: #FFFFFF;
+            font-family: system-ui;
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 30px;
+            margin-top: 20px;
+            width: 140px;
+        }
+        input {
+            color: #222629;
+            font-family: system-ui;
+            font-size: 20px;
+            margin-left: 10px;
+            margin-top: 20px;
+            width: 100px;
+        }
+    </style>
+    <script src="config.js"></script>
+    <script>
+        // callAPI function that takes the base and exponent numbers as parameters
+        var callAPI = (base, exponent) => {
+    // Validate inputs
+    if (!base || !exponent) {
+        alert('Please enter both numbers');
+        return;
+    }
+
+    // Convert to numbers and validate
+    base = Number(base);
+    exponent = Number(exponent);
+
+    if (isNaN(base) || isNaN(exponent)) {
+        alert('Please enter valid numbers');
+        return;
+    }
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var requestBody = {
+        base: base,
+        exponent: exponent
+    };
+
+    console.log('Sending request with:', requestBody);
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(requestBody),
+        mode: 'cors'  // Add this explicitly
+    };
+
+    fetch(window.API_GATEWAY_URL, requestOptions)
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+            // If the result is in the body property
+            if (typeof data.body === 'string') {
+                data = JSON.parse(data.body);
+            }
+            // Display the result
+            if (data.result !== undefined) {
+                alert('Result: ' + data.result);
+            } else {
+                throw new Error('No result in response');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error calculating result: ' + error.message);
+        });
+}
+    </script>
+</head>
+<body>
+    <h1>TO THE POWER OF MATH!</h1>
+    <form>
+        <label>Base number:</label>
+        <input type="text" id="base">
+        <label>...to the power of:</label>
+        <input type="text" id="exponent">
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="callAPI(document.getElementById('base').value, document.getElementById('exponent').value)">CALCULATE</button>
+    </form>
+</body>
+</html>
