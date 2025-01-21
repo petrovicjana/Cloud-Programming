@@ -1,0 +1,10 @@
+version: 1
+frontend:
+  phases:
+    build:
+      commands:
+        - echo "window.API_GATEWAY_URL = '$API_GATEWAY_URL'" > config.js
+  artifacts:
+    baseDirectory: /
+    files:
+      - '**/*'
