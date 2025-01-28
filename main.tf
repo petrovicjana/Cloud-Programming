@@ -17,3 +17,4 @@ module "apigateway" {
 module "dynamodb" {
   source = "./dynamodb"
 }
+
