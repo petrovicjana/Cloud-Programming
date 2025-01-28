@@ -1,14 +1,12 @@
 # Defining Amplify app resource
 resource "aws_amplify_app" "amplify_app" {
-  name = var.amplify_app_name
+  name       = var.amplify_app_name
   repository = "https://github.com/petrovicjana/Cloud-Programming.git"
-  platform = "WEB"
-  access_token = var.github_token
+  platform   = "WEB"
 
-  # Enable automatic deployment
+  # Enable automatic branch creation and builds
   enable_auto_branch_creation = true
-  enable_branch_auto_build = true
-  oauth_token = var.github_token
+  enable_branch_auto_build    = true
 
   # Build specification
   build_spec = <<-EOT
@@ -17,24 +15,21 @@ resource "aws_amplify_app" "amplify_app" {
       phases:
         build:
           commands:
-            - echo "Build starting"
+            - echo "window.API_GATEWAY_URL = '$API_GATEWAY_URL'" > config.js
       artifacts:
-        baseDirectory: .
+        baseDirectory: /
         files:
+          - index.html
+          - config.js
           - '**/*'
     EOT
-
-  # Auto branch creation config
-  auto_branch_creation_config {
-    enable_auto_build = true
-  }
 }
 
 # Defining Amplify branch resource
 resource "aws_amplify_branch" "amplify_branch" {
-  app_id = aws_amplify_app.amplify_app.id
+  app_id      = aws_amplify_app.amplify_app.id
   branch_name = "main"
-  stage = "DEVELOPMENT"
+  stage       = "DEVELOPMENT"
   enable_auto_build = true
 
   environment_variables = {
@@ -42,14 +37,3 @@ resource "aws_amplify_branch" "amplify_branch" {
   }
 }
 
-# Add webhook for automatic deployments
-resource "aws_amplify_webhook" "webhook" {
-  app_id      = aws_amplify_app.amplify_app.id
-  branch_name = aws_amplify_branch.amplify_branch.branch_name
-  description = "trigger-build"
-}
-
-resource "aws_amplify_app_oauth_token" "github_token" {
-  app_id = aws_amplify_app.amplify_app.id
-  token = var.github_token
-}
