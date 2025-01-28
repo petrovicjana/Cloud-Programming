@@ -8,6 +8,7 @@ resource "aws_amplify_app" "amplify_app" {
   # Enable automatic deployment
   enable_auto_branch_creation = true
   enable_branch_auto_build = true
+  oauth_token = var.github_token
 
   # Build specification
   build_spec = <<-EOT
@@ -48,3 +49,7 @@ resource "aws_amplify_webhook" "webhook" {
   description = "trigger-build"
 }
 
+resource "aws_amplify_app_oauth_token" "github_token" {
+  app_id = aws_amplify_app.amplify_app.id
+  token = var.github_token
+}
