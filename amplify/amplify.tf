@@ -3,26 +3,8 @@ resource "aws_amplify_app" "amplify_app" {
   name       = var.amplify_app_name
   repository = "https://github.com/petrovicjana/Cloud-Programming.git"
   platform   = "WEB"
+  access_token = var.github_token
 
-  # Enable automatic branch creation and builds
-  enable_auto_branch_creation = true
-  enable_branch_auto_build    = true
-
-  # Build specification
-  build_spec = <<-EOT
-    version: 1
-    frontend:
-      phases:
-        build:
-          commands:
-            - echo "window.API_GATEWAY_URL = '$API_GATEWAY_URL'" > config.js
-      artifacts:
-        baseDirectory: /
-        files:
-          - index.html
-          - config.js
-          - '**/*'
-    EOT
 }
 
 # Defining Amplify branch resource
