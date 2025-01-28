@@ -19,3 +19,4 @@ resource "aws_amplify_branch" "amplify_branch" {
   }
 }
 
+
